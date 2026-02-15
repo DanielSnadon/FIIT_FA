@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="Arithmetic.Tests/Arithmetic.Tests.csproj" />
+  <Project Path="Arithmetic/Arithmetic.csproj" />
   <Project Path="TreeDataStructures.Tests/TreeDataStructures.Tests.csproj" />
   <Project Path="TreeDataStructures/TreeDataStructures.csproj" />
 </Solution>
