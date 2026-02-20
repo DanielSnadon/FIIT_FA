@@ -9,5 +9,8 @@
         <PublishAot>true</PublishAot>
         <InvariantGlobalization>true</InvariantGlobalization>
     </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="Arithmetic.Tests" />
+    </ItemGroup>
 
 </Project>

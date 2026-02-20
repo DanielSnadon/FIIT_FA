@@ -2,7 +2,8 @@
 
 namespace Arithmetic.BigInt.MultiplyStrategy;
 
-public class FftMultiplier : IMultiplier
+internal class FftMultiplier : IMultiplier
 {
-    public uint[] Multiply(uint[] left, uint[] right) => throw new NotImplementedException("O(n log n log log n)");
+    public BetterBigInteger Multiply(BetterBigInteger a, BetterBigInteger b)
+        => throw new NotImplementedException("O(n log n log log n)");
 }

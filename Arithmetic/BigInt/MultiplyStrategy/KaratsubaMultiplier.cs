@@ -2,7 +2,8 @@
 
 namespace Arithmetic.BigInt.MultiplyStrategy;
 
-public class KaratsubaMultiplier : IMultiplier
+internal class KaratsubaMultiplier : IMultiplier
 {
-    public uint[] Multiply(uint[] left, uint[] right) => throw new NotImplementedException("O(n^1.58)");
+    public BetterBigInteger Multiply(BetterBigInteger a, BetterBigInteger b) 
+        => throw new NotImplementedException("O(n^1.58)");
 }

@@ -216,8 +216,7 @@ public class BigIntArithmeticTests
         BetterBigInteger myB = new(s2, 10);
         
         KaratsubaMultiplier multiplier = new();
-        uint[] resDigits = multiplier.Multiply(myA.GetDigits().ToArray(), myB.GetDigits().ToArray());
-        BetterBigInteger myRes = new(resDigits, false);
+        BetterBigInteger myRes = multiplier.Multiply(myA, myB);
         
         BigInteger expected = BigInteger.Parse(s1) * BigInteger.Parse(s2);
         Assert.That(myRes.ToString(), Is.EqualTo(expected.ToString()));
@@ -235,8 +234,7 @@ public class BigIntArithmeticTests
         BetterBigInteger myB = new(s2, 10);
         
         FftMultiplier multiplier = new();
-        uint[] resDigits = multiplier.Multiply(myA.GetDigits().ToArray(), myB.GetDigits().ToArray());
-        BetterBigInteger myRes = new(resDigits, false);
+        BetterBigInteger myRes = multiplier.Multiply(myA, myB);
         
         BigInteger expected = BigInteger.Parse(s1) * BigInteger.Parse(s2);
         Assert.That(myRes.ToString(), Is.EqualTo(expected.ToString()));
@@ -252,10 +250,9 @@ public class BigIntArithmeticTests
         
         BetterBigInteger myA = new(s1, 10);
         BetterBigInteger myB = new(s2, 10);
-        
         SimpleMultiplier multiplier = new();
-        uint[] resDigits = multiplier.Multiply(myA.GetDigits().ToArray(), myB.GetDigits().ToArray());
-        BetterBigInteger myRes = new(resDigits, false);
+        
+        BetterBigInteger myRes = multiplier.Multiply(myA, myB);
         
         BigInteger expected = BigInteger.Parse(s1) * BigInteger.Parse(s2);
         Assert.That(myRes.ToString(), Is.EqualTo(expected.ToString()));

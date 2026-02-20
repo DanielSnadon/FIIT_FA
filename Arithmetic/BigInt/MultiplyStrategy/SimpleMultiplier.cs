@@ -2,7 +2,8 @@
 
 namespace Arithmetic.BigInt.MultiplyStrategy;
 
-public class SimpleMultiplier : IMultiplier
+internal class SimpleMultiplier : IMultiplier
 {
-    public uint[] Multiply(uint[] left, uint[] right) => throw new NotImplementedException("O(n^2)");
+    public BetterBigInteger Multiply(BetterBigInteger a, BetterBigInteger b) 
+        => throw new NotImplementedException("O(n^2)");
 }
