@@ -1,4 +1,4 @@
-<div align="center"><h1>Completed 0/8 </br> Accepted 0/8</h1></div>
+<div align="center"><h1>ФА </br>Completed 0/2 </br>Accepted 0/2</h1></div>
 
 <div align="center">
 Visitor count: 
