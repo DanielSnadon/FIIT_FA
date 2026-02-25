@@ -1,3 +1,5 @@
+<div align="center"><h1>Completed 0/8 </br> Accepted 0/8</h1></div>
+
 <div align="center">
 Visitor count: 
 <br/>
@@ -19,12 +21,27 @@ Visitor count:
 
 
 
-
-
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
+<h3>.</h3>
 
 
 Чуть позже тут будет реклама.
-![SillyCat](RandomFiles/cat.jpeg)
+
+![SillyCat](https://github.com/DanielSnadon/FIIT_FA/blob/main/RandomFIles/cat.jpeg)
 
 
 
