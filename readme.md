@@ -4,7 +4,7 @@
 Visitor count: 
 <br/>
 
-<img src="https://count.getloli.com/@fa-labs-snadon-2026?name=fa-labs-snadon-2026&theme=e621&padding=7&offset=0&align=top&scale=1&pixelated=1&darkmode=1" alt="MyCounter:3" />
+<img src="https://count.getloli.com/@fa-labs-snadon-2026?name=fa-labs-snadon-2026&theme=e621&padding=7&offset=0&align=top&scale=2&pixelated=1&darkmode=auto" alt="MyCounter:3" />
 
 </div>
 
