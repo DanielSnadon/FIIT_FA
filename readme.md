@@ -1,4 +1,4 @@
-<div align="center"><h1>ФА </br>Completed 0/2 </br>Accepted 0/2</h1></div>
+<div align="center"><h1>ФА </br>Completed 0/8 </br>Accepted 0/8</h1></div>
 
 <div align="center">
 Visitor count: 
@@ -17,33 +17,9 @@ Visitor count:
     *   Long numbers
 
 
-
-
-
-
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-<h3>.</h3>
-
-
-Чуть позже тут будет реклама.
-
 ![SillyCat](https://github.com/DanielSnadon/FIIT_FA/blob/main/RandomFIles/cat.jpeg)
 
-
+Чуть позже тут будет реклама.
 
 
 2026 - [DanielSnadon](https://github.com/DanielSnadon)
