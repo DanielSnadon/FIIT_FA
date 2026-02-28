@@ -424,8 +424,8 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
                 var nodeInfo = _stack.Pop();
                 var node = nodeInfo.Node;
 
-                var first = _reverse ? node.Right : node.Left;
-                var second = _reverse ? node.Left : node.Right;
+                var first = node.Left;
+                var second = node.Right;
 
                 if (nodeInfo.Stage == 0)
                 {
