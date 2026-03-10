@@ -368,43 +368,20 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
     private sealed class TreeIterator : IEnumerator<TreeEntry<TKey, TValue>>
     {
         private readonly TNode? _root;
-        private readonly int _targetStage; // Стадии обхода | 0pre / 1in / 2post
+        private readonly int _targetStage; // 0pre | 1in | 2post
         private readonly bool _reverse;
-
-        private readonly Stack<NodeInfo> _stack = new();
-        private readonly Dictionary<TNode, int> _heights = new(); // Cache
-        private readonly Stack<TreeEntry<TKey, TValue>> _reverseBuffer = new();
-
-        private TreeEntry<TKey, TValue> _current;
-
-        private readonly struct NodeInfo
-        {
-            public readonly TNode Node;
-            public readonly int Stage;
-            public NodeInfo(TNode node, int stage)
-            {
-                Node = node;
-                Stage = stage;
-            }
-        }
+        private TNode? _currentNode;
+        private TNode? _previousNode;
+        private TreeEntry<TKey, TValue> _current; // ОтдаваемыйЭлемент
+        private readonly Dictionary<TNode, int> _heights = new();
 
         public TreeIterator(TNode? root, TraversalStrategy strategy)
         {
             _root = root;
-            convertStrategy(strategy, out _targetStage, out _reverse);
-
+            ConvertStrategy(strategy, out _targetStage, out _reverse);
+            _currentNode = _root;
+            _previousNode = null;
             _current = default;
-
-            if (_root != null)
-            {
-                _stack.Push(new NodeInfo(_root, 0));
-            }
-
-            if (_reverse && _root != null)
-            {
-                BuildReverseBuffer();
-                _stack.Clear();
-            }
         }
 
         public TreeEntry<TKey, TValue> Current => _current;
@@ -412,56 +389,98 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
 
         public bool MoveNext()
         {
-            if (_reverse)
+            while (_currentNode != null)
             {
-                if (_reverseBuffer.Count == 0) return false;
-                _current = _reverseBuffer.Pop();
-                return true;
-            }
+                TNode node = _currentNode;
 
-            while (_stack.Count > 0)
-            {
-                var nodeInfo = _stack.Pop();
-                var node = nodeInfo.Node;
+                TNode? first = _reverse ? node.Right : node.Left;
+                TNode? second = _reverse ? node.Left : node.Right;
 
-                var first = node.Left;
-                var second = node.Right;
-
-                if (nodeInfo.Stage == 0)
+                if (_previousNode == node.Parent)
                 {
-                    _stack.Push(new NodeInfo(node, 1));
-
-                    if (first != null) _stack.Push(new NodeInfo(first, 0));
-
                     if (_targetStage == 0)
                     {
                         _current = MakeEntry(node);
+
+                        _previousNode = node;
+                        _currentNode = first ?? second ?? node.Parent;
+
                         return true;
                     }
-                }
-                else if (nodeInfo.Stage == 1)
-                {
-                    _stack.Push(new NodeInfo(node, 2));
 
-                    if (second != null)
+                    if (first != null)
                     {
-                        _stack.Push(new NodeInfo(second, 0));
+                        _previousNode = node;
+                        _currentNode = first;
+                        continue;
                     }
 
                     if (_targetStage == 1)
                     {
                         _current = MakeEntry(node);
+
+                        _previousNode = node;
+                        _currentNode = second ?? node.Parent;
                         return true;
                     }
+
+                    if (second == null)
+                    {
+                        _current = MakeEntry(node);
+
+                        _previousNode = node;
+                        _currentNode = node.Parent;
+                        return true;
+                    }
+
+                    _previousNode = node;
+                    _currentNode = second;
+                    continue;
                 }
-                else
+
+                if (_previousNode == first)
                 {
+                    if (_targetStage == 1)
+                    {
+                        _current = MakeEntry(node);
+
+                        _previousNode = node;
+                        _currentNode = second ?? node.Parent;
+                        return true;
+                    }
+
+                    if (second != null)
+                    {
+                        _previousNode = node;
+                        _currentNode = second;
+                        continue;
+                    }
+
                     if (_targetStage == 2)
                     {
                         _current = MakeEntry(node);
+
+                        _previousNode = node;
+                        _currentNode = node.Parent;
                         return true;
                     }
+
+                    _previousNode = node;
+                    _currentNode = node.Parent;
+                    continue;
                 }
+
+                if (_targetStage == 2)
+                {
+                    _current = MakeEntry(node);
+
+                    _previousNode = node;
+                    _currentNode = node.Parent;
+                    return true;
+                }
+
+                _previousNode = node;
+                _currentNode = node.Parent;
             }
 
             return false;
@@ -469,30 +488,17 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
 
         public void Reset()
         {
-            _stack.Clear();
-            _heights.Clear();
-            _reverseBuffer.Clear();
+            _currentNode = _root;
+            _previousNode = null;
             _current = default;
-
-            if (_root != null)
-            {
-                _stack.Push(new NodeInfo(_root, 0));
-            }
-
-            if (_reverse && _root != null)
-            {
-                BuildReverseBuffer();
-                _stack.Clear();
-            }
+            _heights.Clear();
         }
 
         public void Dispose()
         {
-            // TODO release managed resources here
         }
 
-        private TreeEntry<TKey, TValue> MakeEntry(TNode node) =>
-            new TreeEntry<TKey, TValue>(node.Key, node.Value, Height(node));
+        private TreeEntry<TKey, TValue> MakeEntry(TNode node) => new TreeEntry<TKey, TValue>(node.Key, node.Value, Height(node));
 
         private int Height(TNode? node)
         {
@@ -507,96 +513,45 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
             }
 
             h = 1 + Math.Max(Height(node.Left), Height(node.Right));
+
             _heights[node] = h;
+
             return h;
         }
 
-        private void BuildReverseBuffer() // A lot of страданий, ради небольшого функционала :(
+        private static void ConvertStrategy(TraversalStrategy inputStrata, out int targetStage, out bool reverse)
         {
-            var tmp = new Stack<NodeInfo>();
-            tmp.Push(new NodeInfo(_root!, 0));
-
-            while (tmp.Count > 0)
+            switch (inputStrata)
             {
-                var nodeInfo = tmp.Pop();
-                var node = nodeInfo.Node;
-
-                var first = node.Left;
-                var second = node.Right;
-
-                if (nodeInfo.Stage == 0)
-                {
-                    tmp.Push(new NodeInfo(node, 1));
-
-                    if (first != null) tmp.Push(new NodeInfo(first, 0));
-
-                    if (_targetStage == 0)
-                        _reverseBuffer.Push(MakeEntry(node));
-                }
-                else if (nodeInfo.Stage == 1)
-                {
-                    tmp.Push(new NodeInfo(node, 2));
-
-                    if (second != null) tmp.Push(new NodeInfo(second, 0));
-
-                    if (_targetStage == 1)
-                        _reverseBuffer.Push(MakeEntry(node));
-                }
-                else
-                {
-                    if (_targetStage == 2)
-                        _reverseBuffer.Push(MakeEntry(node));
-                }
-            }
-        }
-
-        private static void convertStrategy(TraversalStrategy strat, out int targetStage, out bool reverse)
-        {
-            switch (strat)
-            {
-                case (TraversalStrategy.InOrder):
-                    {
-                        reverse = false;
-                        targetStage = 1;
-                        break;
-                    }
-                case (TraversalStrategy.InOrderReverse):
-                    {
-                        reverse = true;
-                        targetStage = 1;
-                        break;
-                    }
-                case (TraversalStrategy.PreOrder):
-                    {
-                        reverse = false;
-                        targetStage = 0;
-                        break;
-                    }
-                case (TraversalStrategy.PreOrderReverse):
-                    {
-                        reverse = true;
-                        targetStage = 0;
-                        break;
-                    }
-                case (TraversalStrategy.PostOrder):
-                    {
-                        reverse = false;
-                        targetStage = 2;
-                        break;
-                    }
-                case (TraversalStrategy.PostOrderReverse):
-                    {
-                        reverse = true;
-                        targetStage = 2;
-                        break;
-                    }
+                case TraversalStrategy.InOrder:
+                    reverse = false;
+                    targetStage = 1;
+                    break;
+                case TraversalStrategy.InOrderReverse:
+                    reverse = true;
+                    targetStage = 1;
+                    break;
+                case TraversalStrategy.PreOrder:
+                    reverse = false;
+                    targetStage = 0;
+                    break;
+                case TraversalStrategy.PreOrderReverse:
+                    reverse = true;
+                    targetStage = 2;
+                    break;
+                case TraversalStrategy.PostOrder:
+                    reverse = false;
+                    targetStage = 2;
+                    break;
+                case TraversalStrategy.PostOrderReverse:
+                    reverse = true;
+                    targetStage = 0;
+                    break;
                 default:
-                    {
-                        reverse = false;
-                        targetStage = 1;
-                        break;
-                    }
-            }
+                    reverse = false;
+                    targetStage = 1;
+                    break;
+            } // Magic.
         }
     }
     

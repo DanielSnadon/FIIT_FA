@@ -16,5 +16,5 @@ public class BinarySearchTree<TKey, TValue> : BinarySearchTreeBase<TKey, TValue,
 
 }
 
-// Запустить тесты v v v
-// dotnet test TreeDataStructures.Tests/ --filter TestCategory=BST -r linux-x64 -v normal
+// Запустить тесты только для этого типа v v v
+// dotnet test TreeDataStructures.Tests/ --filter TestCategory=BST -r linux-x64 -v normal   
