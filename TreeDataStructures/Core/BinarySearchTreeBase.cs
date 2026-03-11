@@ -107,15 +107,26 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
     
     protected virtual void RemoveNode(TNode node) // Implemented
     {
+        TNode? rebalanceParent;
+        TNode? rebalanceChild;
+
         if (node.Left == null)
         {
+            rebalanceParent = node.Parent;
+            rebalanceChild = node.Right;
+
             Transplant(node, node.Right);
+            OnNodeRemoved(rebalanceParent, rebalanceChild);
             return;
         }
 
         if (node.Right == null)
         {
+            rebalanceParent = node.Parent;
+            rebalanceChild = node.Left;
+
             Transplant(node, node.Left);
+            OnNodeRemoved(rebalanceParent, rebalanceChild);
             return;
         }
 
@@ -123,16 +134,26 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
 
         if (newNode.Parent != node)
         {
+            rebalanceParent = newNode.Parent;
+            rebalanceChild = newNode.Right;
+
             Transplant(newNode, newNode.Right);
 
             newNode.Right = node.Right;
             newNode.Right.Parent = newNode;
+        }
+        else
+        {
+            rebalanceParent = newNode;
+            rebalanceChild = newNode.Right;
         }
 
         Transplant(node, newNode);
 
         newNode.Left = node.Left;
         newNode.Left.Parent = newNode;
+
+        OnNodeRemoved(rebalanceParent, rebalanceChild);
     }
 
     public virtual bool ContainsKey(TKey key) => FindNode(key) != null;
@@ -331,8 +352,6 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
         {
             v.Parent = parent;
         }
-
-        OnNodeRemoved(parent, v);
     }
     #endregion
     
