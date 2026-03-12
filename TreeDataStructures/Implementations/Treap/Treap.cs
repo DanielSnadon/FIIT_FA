@@ -23,10 +23,7 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
             var (middleLeft, right) = Split(root.Right, key);
 
             root.Right = middleLeft;
-            if (middleLeft != null)
-            {
-                middleLeft.Parent = root;
-            }
+            middleLeft?.Parent = root;
 
             root.Parent = null;
             return (root, right);
@@ -36,10 +33,7 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
             var (left, middleRight) = Split(root.Left, key);
 
             root.Left = middleRight;
-            if (middleRight != null)
-            {
-                middleRight.Parent = root;
-            }
+            middleRight?.Parent = root;
 
             root.Parent = null;
             return (left, root);
@@ -55,10 +49,7 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
     {
         if (left == null)
         {
-            if (right != null)
-            {
-                right.Parent = null;
-            }
+            right?.Parent = null;
             return right;
         }
 
@@ -72,10 +63,7 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
         {
             left.Right = Merge(left.Right, right);
 
-            if (left.Right != null)
-            {
-                left.Right.Parent = left;
-            }
+            left.Right?.Parent = left;
 
             left.Parent = null;
 
@@ -85,10 +73,7 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
         {
             right.Left = Merge(left, right.Left);
 
-            if (right.Left != null)
-            {
-                right.Left.Parent = right;
-            }
+            right.Left?.Parent = right;
 
             right.Parent = null;
 
@@ -111,10 +96,7 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
 
         Root = Merge(Merge(left, newNode), right);
 
-        if (Root != null)
-        {
-            Root.Parent = null;
-        }
+        Root?.Parent = null;
 
         Count++;
     }
@@ -132,26 +114,17 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
         if (node.Parent == null)
         {
             Root = merged;
-            if (Root != null)
-            {
-                Root.Parent = null;
-            }
+            Root?.Parent = null;
         }
         else if (node.IsLeftChild)
         {
             node.Parent.Left = merged;
-            if (merged != null)
-            {
-                merged.Parent = node.Parent;
-            }
+            merged?.Parent = node.Parent;
         }
         else
         {
             node.Parent.Right = merged;
-            if (merged != null)
-            {
-                merged.Parent = node.Parent;
-            }
+            merged?.Parent = node.Parent;
         }
 
         Count--;

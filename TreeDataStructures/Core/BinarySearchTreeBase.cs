@@ -293,7 +293,7 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
             RotateLeft(newTop);
         }
     }
-    
+
     protected void RotateBigRight(TNode y)
     {
         RotateRight(y);
@@ -347,11 +347,8 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
         {
             u.Parent.Right = v;
         }
-        // v?.Parent = u.Parent; <- Разве подобная строка будет работать? Если v = null, то присваивание пусто
-        if (v != null) // Reworked just in case
-        {
-            v.Parent = parent;
-        }
+        
+        v?.Parent = u.Parent;
     }
     #endregion
     
