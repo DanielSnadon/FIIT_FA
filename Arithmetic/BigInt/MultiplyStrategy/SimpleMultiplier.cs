@@ -18,6 +18,7 @@ internal class SimpleMultiplier : IMultiplier
 
         bool isNegative = a.IsNegative ^ b.IsNegative;
         uint[] product = BetterBigInteger.MultiplyClassic(a.GetDigits(), b.GetDigits());
+        
         return BetterBigInteger.FromMagnitude(product, isNegative);
     }
 }

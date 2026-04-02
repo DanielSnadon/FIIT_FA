@@ -690,6 +690,30 @@ public sealed class BetterBigInteger : IBigInteger
         return NormalizeCopy(result);
     }
     
+    internal static uint[] ShiftByWordsLeft(ReadOnlySpan<uint> digits, int wordShift)
+    {
+        if (wordShift < 0)
+        {
+            throw new ArgumentOutOfRangeException("Количество слов для сдвига не может быть отрицательным.");
+        }
+
+        int length = GetRealLength(digits);
+
+        if (length == 0)
+        {
+            return [0u];
+        }
+
+        uint[] result = new uint[length + wordShift];
+
+        for (int i = 0; i < length; i++)
+        {
+            result[i + wordShift] = digits[i];
+        }
+
+        return result;
+    }
+
     private static BetterBigInteger Zero()
     {
         return new BetterBigInteger();
