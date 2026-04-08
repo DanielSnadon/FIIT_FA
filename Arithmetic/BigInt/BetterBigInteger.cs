@@ -285,10 +285,6 @@ public sealed class BetterBigInteger : IBigInteger
         return FromMagnitude(remainder, isNegative);
     }
 
-    // Умножение делегируем стратегии.
-    // Малые числа -> simple.
-    // Средние -> Karatsuba.
-    // Крупные -> FFT.
     public static BetterBigInteger operator *(BetterBigInteger a, BetterBigInteger b)
     {
         if (a is null)
@@ -977,25 +973,25 @@ public sealed class BetterBigInteger : IBigInteger
 
         int bitLength = GetBitLength(normalizedDividend);
         uint[] divRes = new uint[(bitLength + bitsPerWord - 1) / bitsPerWord];
-        uint[] currentRemainder = [0u];
+        uint[] acc = [0u];
 
         for (int bit = bitLength - 1; bit >= 0; bit--)
         {
-            currentRemainder = ShiftLeftMagnitude(currentRemainder, 1);
+            acc = ShiftLeftMagnitude(acc, 1);
 
             if (GetBit(normalizedDividend, bit))
             {
-                currentRemainder = AddUInt(currentRemainder, 1u);
+                acc = AddUInt(acc, 1u);
             }
             
-            if (CompareMagnitudes(currentRemainder, normalizedDivisor) >= 0)
+            if (CompareMagnitudes(acc, normalizedDivisor) >= 0)
             {
-                currentRemainder = SubtractMagnitudes(currentRemainder, normalizedDivisor);
+                acc = SubtractMagnitudes(acc, normalizedDivisor);
                 divRes[bit / bitsPerWord] |= 1u << (bit % bitsPerWord);
             }
         }
 
-        remainder = NormalizeCopy(currentRemainder);
+        remainder = NormalizeCopy(acc);
         return NormalizeCopy(divRes);
     }
     

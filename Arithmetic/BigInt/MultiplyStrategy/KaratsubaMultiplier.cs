@@ -4,7 +4,7 @@ namespace Arithmetic.BigInt.MultiplyStrategy;
 
 internal class KaratsubaMultiplier : IMultiplier
 {
-    private const int minimalSize = 32; // Для малых чисел алгоритм Карацубы может быть менее эффективным, чем классическое умножение.
+    private const int minimalSize = 32; // Порог использования классического умножения
     public BetterBigInteger Multiply(BetterBigInteger a, BetterBigInteger b) 
     {
         if (a is null)
@@ -18,10 +18,9 @@ internal class KaratsubaMultiplier : IMultiplier
         }
 
         bool isNegative = a.IsNegative ^ b.IsNegative;
-        uint[] product = MultiplyKaratsuba(a.GetDigits(), b.GetDigits());
+        uint[] res = MultiplyKaratsuba(a.GetDigits(), b.GetDigits());
 
-
-        return BetterBigInteger.FromMagnitude(product, isNegative);
+        return BetterBigInteger.FromMagnitude(res, isNegative);
     }
 
     private static uint[] MultiplyKaratsuba(ReadOnlySpan<uint> left, ReadOnlySpan<uint> right)
