@@ -7,6 +7,8 @@ using Arithmetic.BigInt.MultiplyStrategy;
 
 namespace Arithmetic;
 
+// Запусти меня <- dotnet run --project Arithmetic/Arithmetic.csproj
+
 internal static class Program
 {
     // Здесь можно быстро менять размеры чисел.
